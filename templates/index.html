@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Dashboard</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+
+<h1>Task Dashboard</h1>
+
+<form id="addTaskForm">
+    <label for="taskDescription">Task Description:</label>
+    <input type="text" id="taskDescription" name="taskDescription" required>
+    <button type="submit">Add Task</button>
+</form>
+
+<ul id="taskList">
+    {% for task in tasks %}
+        <li>{{ task.description }} - {{ task.status }}</li>
+    {% endfor %}
+</ul>
+
+<!-- ... (previous HTML code) ... -->
+
+<h2>Timeline</h2>
+
+<ul id="timeline">
+    {% for task in tasks %}
+        <li>{{ task.description }} - {{ task.status }}</li>
+    {% endfor %}
+</ul>
+
+<!-- ... (remaining HTML code) ... -->
+
+<script>
+    $(document).ready(function () {
+        $('#addTaskForm').submit(function (event) {
+            event.preventDefault();
+            var taskDescription = $('#taskDescription').val();
+
+            $.ajax({
+                url: '/add_task',
+                type: 'POST',
+                data: {task_description: taskDescription},
+                success: function (response) {
+                    if (response.success) {
+                        $('#taskList').append('<li>' + taskDescription + ' - Pending</li>');
+                        $('#taskDescription').val('');
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
